@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+	
+	<parameters>
+        <parameter key="form.type.bean_google_maps.class">Bean\Bundle\LocationBundle\Form\Type\GoogleMapType</parameter>
+		<!-- Geolocation -->
+		<parameter key="bean_location.admin.geolocation.class">Bean\Bundle\LocationBundle\Admin\GeolocationAdmin</parameter>
+		<parameter key="bean_location.admin.geolocation.controller">SonataAdminBundle:CRUD</parameter>		
+		<parameter key="bean_location.admin.geolocation.translation_domain">BeanLocationBundle</parameter>
+		<parameter key="bean_location.manager.location.class">Bean\Bundle\LocationBundle\Doctrine\LocationManager</parameter>		
+		<parameter key="bean_location.location.class">Application\Bean\LocationBundle\Entity\Geolocation</parameter>		
+		
+    </parameters>
+
+    <services>
+        <!-- bean_google_maps form type -->
+        <service id="form.type.bean_google_maps" class="%bean_location.admin.geolocation.class%">
+            <tag name="form.type" />
+        </service>		
+		<!-- GeolocationAdmin -->
+
+        <service id="bean_location.admin.geolocation" class="%bean_location.admin.geolocation.class%">
+            <tag name="sonata.admin" manager_type="orm" group="bean_location" label_catalogue="%bean_location.admin.geolocation.translation_domain%" label="geolocation" label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+            <argument/>
+            <argument>%bean_location.location.class%</argument> <!-- TODO: parameterise this -->
+            <argument>%bean_location.admin.geolocation.controller%</argument>
+            <call method="setStringService">
+                <argument type="service" id="bean_core.string"/>
+            </call>
+            <call method="setTranslationDomain">
+                <argument>%bean_location.admin.geolocation.translation_domain%</argument>
+            </call>
+        </service>
+
+		<service id="bean_location.manager.location" class="%bean_location.manager.location.class%">
+			<argument>%bean_location.location.class%</argument>
+            <argument type="service" id="doctrine"/>		
+		</service>
+		
+		
+    </services>
+</container>

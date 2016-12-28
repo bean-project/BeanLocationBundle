@@ -1,0 +1,81 @@
+{% block bean_google_maps_widget %}
+    <div {{ block('widget_container_attributes') }}>
+        {% block bean_google_maps_fields %}
+            {% for child in form %}
+                {{ form_row(child) }}
+            {% endfor %}
+        {% endblock %}
+
+
+        {% block bean_google_maps_html %}
+            <div id="{{ id }}_container">
+                <!-- <input type="text" id="{{ id }}_input" class="form-control" /> -->
+                {#<button id="{{ id }}_search_button" class="btn hidden">Search</button>#}
+                <!--<br/>-->
+                {#<a class="hidden" href="#" id="{{ id }}_current_position">Current location</a>#}
+                <div class="{{ show_map ? '' : 'hidden' }}" id="{{ id }}_map_canvas" class="gmap"
+                     style="width: {{ map_width }}; height: {{ map_height }}"></div>
+                <div id="{{ id }}_error"></div>
+            </div>
+        {% endblock %}
+
+
+        {% block bean_google_maps_javascripts %}
+            {% if include_jquery %}
+                <!-- <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+                -->
+            {% endif %}
+            {% if include_gmaps_js %}
+
+            {% endif %}
+
+
+            {% javascripts '@BeanLocationBundle/Resources/public/js/jquery.ohgooglemaps.js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+
+
+        {% endblock %}
+        {% block bean_google_maps_javascript %}
+        {% block bean_google_maps_callback %}
+            <script type="text/javascript">
+                var bean_google_maps_callback = function (location, gmap) {
+                    // your callback function here
+                }
+            </script>
+        {% endblock %}
+            <script async defer type="text/javascript">
+                $(function () {
+                    $('#{{ id }}_map_canvas').ohGoogleMapType({
+                        'search_input_el_backup': $('#{{ id }}_input'),
+                        'search_action_el': $('#{{ id }}_search_button'),
+                        'search_error_el': $('#{{ id }}_error'),
+                        'current_position_el': $('#{{ id }}_current_position'),
+                        'default_lat': '{% if value is defined and value and attribute(value, lat_name) %}{{ attribute(value, lat_name) }}{% else %}{{ default_lat }}{% endif %}',
+                        'default_long': '{% if value is defined and value and attribute(value, long_name) %}{{ attribute(value, long_name) }}{% else %}{{ default_long }}{% endif %}',
+                        'default_zoom': {% if value is defined and value and attribute(value, lat_name) and attribute(value, long_name) %}15{% else %}5{% endif %},
+                        'lat_field': $('#{{ attribute(form, lat_name).vars.id }}'),
+                        'long_field': $('#{{ attribute(form, long_name).vars.id }}'),
+                        'callback': bean_google_maps_callback,
+//				  'country_hidden_el'	: $('.country-hidden-data')
+                        'country_field': $('#{{ attribute(form, country_name).vars.id }}'),
+                        'default_country': '{% if value is defined and value and attribute(value, country_name) %}{{ attribute(value, country_name) }}{% else %}{% endif %}',
+
+                        'first_division_field': $('#{{ attribute(form, first_division_name).vars.id }}'),
+                        'second_division_field': $('#{{ attribute(form, second_division_name).vars.id }}'),
+                        'third_division_field': $('#{{ attribute(form, third_division_name).vars.id }}'),
+                        'fourth_division_field': $('#{{ attribute(form, fourth_division_name).vars.id }}'),
+                        'fifth_division_field': $('#{{ attribute(form, fifth_division_name).vars.id }}'),
+                        'street_field': $('#{{ attribute(form, street_name).vars.id }}'),
+                        'number_field': $('#{{ attribute(form, number_name).vars.id }}'),
+                        'address_field': $('#{{ attribute(form, address_name).vars.id }}'),
+                        'place_id_field': $('#{{ attribute(form, place_id_name).vars.id }}'),
+                        'locality_field': $('#{{ attribute(form, locality_name).vars.id }}'),
+                        'default_place_id': '{% if value is defined and value and attribute(value, place_id_name) %}{{ attribute(value, place_id_name) }}{% else %}{% endif %}',
+                        'default_address': '{% if value is defined and value and attribute(value, address_name) %}{{ attribute(value, address_name) }}{% else %}{% endif %}'
+                    });
+                });
+            </script>
+        {% endblock %}
+    </div>
+{% endblock %}
