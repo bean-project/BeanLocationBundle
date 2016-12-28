@@ -12,7 +12,7 @@
   ],
   "require": {
     "symfony/framework-bundle": "^3.1",
-    "sonata-project/core-bundle": "^2.3"
+    "sonata-project/core-bundle": "^3.0"
   },
   "require-dev": {
     "doctrine/mongodb-odm": "~1.0",
