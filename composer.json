@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "bean-project/core-bundle": "^0.1",
+    "bean-project/core-bundle": "^0.1"
   },
   "require-dev": {
     "doctrine/mongodb-odm": "~1.0",
